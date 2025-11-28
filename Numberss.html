@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Random 2 Digit Slot</title>
+
+<style>
+    body {
+        font-family: "Prompt", sans-serif;
+        background: #f9f6f2;
+        padding: 40px;
+        color: #4a3b2a;
+        text-align: center;
+    }
+
+    /* Header */
+    .header-box {
+        width: 100%;
+        height: 120px;
+        background: #f9f6f2;
+        border: 3px solid #f9f6f2;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        color: #8a6b4a;
+        font-weight: bold;
+    }
+
+    .btn {
+        background: #c79262;
+        border: none;
+        padding: 12px 35px;
+        color: white;
+        font-size: 20px;
+        border-radius: 8px;
+        margin: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn:hover {
+        background: #b27e54;
+    }
+
+    /* กล่องตัวเลข */
+    .number-box {
+        margin: 30px auto;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .digit {
+        width: 120px;
+        height: 150px;
+        background: #fff;
+        border-radius: 10px;
+        border: 8px solid #8a6b4a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 90px;
+        font-weight: bold;
+        color: #333;
+        overflow: hidden;
+    }
+
+    /* ตารางประวัติ */
+    .history-wrapper {
+        width: 420px;
+        margin: 0 auto;
+        margin-top: 30px;
+        background: white;
+        border: 2px solid #d5c7b7;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .history-header {
+        font-size: 20px;
+        padding: 10px 0;
+        border-bottom: 2px solid #eee2d4;
+        margin-bottom: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 18px;
+    }
+
+    td {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:nth-child(even) {
+        background: #faf5ee;
+    }
+
+    tr.highlight {
+        background: #ffeebc !important;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<!-- Header (เว้นไว้สำหรับแบนเนอร์/ชื่อกิจกรรม) -->
+<div class="header-box">
+    <span> 🖤 Super Suport TechX 💜</span>
+</div>
+
+<button class="btn" onclick="startSlot()">🎰 RANDOM สุ่ม</button>
+<button class="btn" onclick="clearHistory()">🧹 Clear Result</button>
+
+<div class="number-box">
+    <div class="digit" id="d1">-</div>
+    <div class="digit" id="d2">-</div>
+</div>
+
+<div class="history-wrapper">
+    <div class="history-header">ผลลัพธ์</div>
+    <table id="historyTable"></table>
+</div>
+
+<script>
+let count = 0;
+let spinning = false;
+
+function startSlot() {
+    if (spinning) return;  // กันไม่ให้กดซ้ำตอนกำลังหมุน
+    spinning = true;
+
+    let d1 = document.getElementById("d1");
+    let d2 = document.getElementById("d2");
+
+    let interval1 = setInterval(() => {
+        d1.textContent = Math.floor(Math.random() * 10);
+    }, 50);
+
+    let interval2 = setInterval(() => {
+        d2.textContent = Math.floor(Math.random() * 10);
+    }, 50);
+
+    // หยุดช้ากว่ากันเล็กน้อยแบบ slot
+    let finalNum = Math.floor(Math.random() * 100);
+    let formatted = finalNum.toString().padStart(2, '0');
+
+    setTimeout(() => {
+        clearInterval(interval1);
+        d1.textContent = formatted[0];
+    }, 1200);
+
+    setTimeout(() => {
+        clearInterval(interval2);
+        d2.textContent = formatted[1];
+        spinning = false;
+        addHistory(formatted);
+    }, 1700);
+}
+
+function addHistory(num) {
+    count++;
+    let table = document.getElementById("historyTable");
+
+    let row = table.insertRow(0);
+    row.className = "highlight";
+
+    let cellIndex = row.insertCell(0);
+    let cellValue = row.insertCell(1);
+
+    cellIndex.innerHTML = count + ".";
+    cellValue.innerHTML = num;
+
+    // ลบ highlight แถวก่อนหน้า
+    if (table.rows[1]) {
+        table.rows[1].classList.remove("highlight");
+    }
+}
+
+function clearHistory() {
+    document.getElementById("historyTable").innerHTML = "";
+    count = 0;
+}
+</script>
+
+</body>
+</html>
